@@ -1,0 +1,6 @@
+com\hmrc\cftf\services\ingestion\App.class
+com\hmrc\cftf\services\ingestion\IngestionHelperServiceImpl.class
+com\hmrc\cftf\services\ingestion\IngestionServiceResponse.class
+com\hmrc\cftf\services\ingestion\IngestionService.class
+com\hmrc\cftf\services\ingestion\IngestionServiceRequest.class
+com\hmrc\cftf\services\ingestion\IngestionHelperService.class

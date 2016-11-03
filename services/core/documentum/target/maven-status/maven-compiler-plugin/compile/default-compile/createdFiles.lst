@@ -1,0 +1,4 @@
+com\hmrc\cftf\services\documentum\App.class
+com\hmrc\cftf\services\documentum\DocumentumPublisherService.class
+com\hmrc\cftf\services\documentum\Type2ToDocumentumTransformer.class
+com\hmrc\cftf\services\documentum\Type1ToDocumentumTransformer.class

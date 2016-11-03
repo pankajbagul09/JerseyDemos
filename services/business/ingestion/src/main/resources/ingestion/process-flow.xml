@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+
+    <import resource="spring-beans.xml"/>
+    <import resource="classpath*:/customerlookup/process-flow.xml"/>
+    <import resource="classpath*:/documentum/process-flow.xml"/>
+
+    <int:channel id="ingestionRequestChannel"/>
+    <int:channel id="ingestionResponseChannel"/>
+
+    <!--TOP LEVEL JAVA INTERFACE GATEWAY PROXY FOR INVOKING THE SERVICE-->
+    <int:gateway id="ingestionService" service-interface="com.hmrc.cftf.services.common.CoreService">
+        <int:method name="invoke" request-channel="ingestionRequestChannel" reply-channel="ingestionResponseChannel"/>
+    </int:gateway>
+
+    <int:chain input-channel="ingestionRequestChannel">
+        <!--Copy content type into header for routing purpose-->
+        <int:header-enricher>
+            <int:header name="contentType" expression="payload.contentType"/>
+        </int:header-enricher>
+        <!-- Customer lookup and replace customer name and id in the document embedded in json -->
+        <int:service-activator ref="ingestionHelperService" method="updateCustomerInformation"/>
+        <!--Extracting document from the request object and passing for further processing-->
+        <int:transformer expression="payload.contentAsXml"/>
+        <!--Routing document to appropriate transformer-->
+        <int:header-value-router header-name="contentType">
+            <int:mapping value="TYPE_1" channel="type1TransformerRequestChannel"/>
+            <int:mapping value="TYPE_2" channel="type2TransformerRequestChannel"/>
+        </int:header-value-router>
+    </int:chain>
+
+    <!--Response from transformer is piped into single channel for publishing-->
+    <int:bridge input-channel="type1TransformerResponseChannel" output-channel="documentumPublishingRequestChannel"/>
+    <int:bridge input-channel="type2TransformerResponseChannel" output-channel="documentumPublishingRequestChannel"/>
+    <!-- Response after publishing the document is processed and returned back-->
+    <int:service-activator input-channel="documentumPublishingResponseChannel" output-channel="ingestionResponseChannel"
+                           ref="ingestionHelperService" method="createResponse"/>
+
+
+</beans>

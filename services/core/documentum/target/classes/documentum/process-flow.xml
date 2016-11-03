@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <import resource="spring-beans.xml"/>
+
+    <int:channel id="type1TransformerRequestChannel"/>
+    <int:channel id="type1TransformerResponseChannel"/>
+    <int:channel id="type2TransformerRequestChannel"/>
+    <int:channel id="type2TransformerResponseChannel"/>
+    <int:channel id="documentumPublishingRequestChannel"/>
+    <int:channel id="documentumPublishingResponseChannel"/>
+
+    <int:gateway id="type1TransformerService" service-interface="com.hmrc.cftf.services.common.CoreService">
+        <int:method name="invoke" request-channel="type1TransformerRequestChannel"
+                    reply-channel="type1TransformerResponseChannel"/>
+    </int:gateway>
+    <int:gateway id="type2TransformerService" service-interface="com.hmrc.cftf.services.common.CoreService">
+        <int:method name="invoke" request-channel="type2TransformerRequestChannel"
+                    reply-channel="type2TransformerResponseChannel"/>
+    </int:gateway>
+    <int:gateway id="documentumPublisherService" service-interface="com.hmrc.cftf.services.common.CoreService">
+        <int:method name="invoke" request-channel="documentumPublishingRequestChannel"
+                    reply-channel="documentumPublishingResponseChannel"/>
+    </int:gateway>
+
+
+    <int:service-activator input-channel="type1TransformerRequestChannel"
+                           output-channel="type1TransformerResponseChannel" ref="type1ToDocumentumTransformerBean"
+                           method="invoke"/>
+
+    <int:service-activator input-channel="type2TransformerRequestChannel"
+                           output-channel="type2TransformerResponseChannel" ref="type2ToDocumentumTransformerBean"
+                           method="invoke"/>
+    <int:service-activator input-channel="documentumPublishingRequestChannel"
+                           output-channel="documentumPublishingResponseChannel" ref="documentumPublisherBean"
+                           method="invoke"/>
+
+
+</beans>

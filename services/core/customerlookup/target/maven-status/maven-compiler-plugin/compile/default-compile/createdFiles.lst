@@ -1,0 +1,4 @@
+com\hmrc\cftf\services\customerlookup\App.class
+com\hmrc\cftf\services\customerlookup\CustomerDataResponse.class
+com\hmrc\cftf\services\customerlookup\CustomerDataRequest.class
+com\hmrc\cftf\services\customerlookup\CustomerLookUpService.class

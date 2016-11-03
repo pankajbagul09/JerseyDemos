@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ingestion-webapp:war">
+    <output-path>$PROJECT_DIR$/bundles/ingestion-webapp/target</output-path>
+    <root id="archive" name="ingestion-service.war">
+      <element id="artifact" artifact-name="ingestion-webapp:war exploded" />
+    </root>
+  </artifact>
+</component>

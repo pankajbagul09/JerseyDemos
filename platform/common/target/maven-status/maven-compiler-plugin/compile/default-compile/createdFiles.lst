@@ -1,0 +1,9 @@
+com\hmrc\cftf\services\common\ServiceCatalog.class
+com\hmrc\cftf\services\common\model\ServiceResponse.class
+com\hmrc\cftf\services\common\CoreService.class
+com\hmrc\cftf\services\common\AbstractCoreService.class
+com\hmrc\cftf\services\common\ContentType.class
+com\hmrc\cftf\services\common\CompositeService.class
+com\hmrc\cftf\services\common\ContentServiceException.class
+com\hmrc\cftf\services\common\model\ServiceRequest.class
+com\hmrc\cftf\services\common\AbstractCompositeService.class
